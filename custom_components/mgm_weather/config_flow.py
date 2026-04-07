@@ -8,14 +8,16 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 
-from .const import DOMAIN, CONF_CITY
+# const.py dosyanıza CONF_DISTRICT eklediğiniz varsayılmıştır.
+from .const import DOMAIN, CONF_CITY, CONF_DISTRICT 
 
 _LOGGER = logging.getLogger(__name__)
 
-# Kullanıcıdan istenecek veri şeması (Sadece Şehir Adı)
+# Kullanıcıdan istenecek veri şeması (Şehir ve İlçe)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_CITY, default="Istanbul"): str,
+        vol.Optional(CONF_DISTRICT, default=""): str, # İlçe alanı eklendi
     }
 )
 
@@ -31,15 +33,21 @@ class MgmConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            # Kullanıcının girdiği şehir adını al
-            city = user_input[CONF_CITY]
+            # Kullanıcının girdiği şehir ve ilçe adını al
+            city = user_input[CONF_CITY].strip()
+            district = user_input.get(CONF_DISTRICT, "").strip()
             
-            # Benzersiz ID olarak şehir adını kullan (Aynı şehri 2 kere ekleyemesin)
-            await self.async_set_unique_id(city.lower())
+            # Aynı ilin farklı ilçelerini ekleyebilmek için benzersiz ID'yi birleştiriyoruz
+            unique_id_str = f"{city}_{district}".lower() if district else city.lower()
+            
+            await self.async_set_unique_id(unique_id_str)
             self._abort_if_unique_id_configured()
 
+            # Arayüzde görünecek başlığı ayarla (İlçe girilmişse "İl - İlçe" şeklinde gösterir)
+            title = f"{city} - {district}" if district else city
+
             # Başarılı ise kaydet ve entegrasyonu oluştur
-            return self.async_create_entry(title=city, data=user_input)
+            return self.async_create_entry(title=title, data=user_input)
 
         # Formu göster
         return self.async_show_form(
