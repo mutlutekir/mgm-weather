@@ -132,7 +132,7 @@ columns: full</code></pre>
 <ol>
 <li>Home Assistant'ta <strong>HACS</strong> menüsünü açın.</li>
 <li><strong>Integrations</strong> (Entegrasyonlar) kısmına gidin > sağ üstteki üç noktaya tıklayın > <strong>Custom repositories</strong> (Özel depolar).</li>
-<li>Bu reponun adresini yapıştırın: <code>https://github.com/taskinfa/mgm-weather</code></li>
+<li>Bu reponun adresini yapıştırın: <code>https://github.com/mutlutekir/mgm-weather</code></li>
 <li>Kategori olarak <strong>Integration</strong> seçin ve <strong>Ekle</strong> deyin.</li>
 <li>Listeden <strong>"MGM Hava Durumu (FT)"</strong> entegrasyonunu bulup indirin.</li>
 <li>Home Assistant'ı <strong>Yeniden Başlatın</strong>.</li>
@@ -140,7 +140,7 @@ columns: full</code></pre>
 
 <h4>Yöntem 2: Manuel</h4>
 <ol>
-<li><a href="https://github.com/taskinfa/mgm-weather/releases">En son sürümü</a> indirin.</li>
+<li><a href="https://github.com/mutlutekir/mgm-weather/releases">En son sürümü</a> indirin.</li>
 <li><code>custom_components/mgm_weather</code> klasörünü Home Assistant dizininizdeki <code>custom_components</code> klasörünün içine kopyalayın.</li>
 <li>Home Assistant'ı <strong>Yeniden Başlatın</strong>.</li>
 </ol>
@@ -156,6 +156,7 @@ columns: full</code></pre>
 <li>Sağ alttaki <strong>+ ENTEGRASYON EKLE</strong> butonuna tıklayın.</li>
 <li>Arama kutusuna <strong>"MGM Hava Durumu (FT)"</strong> yazın.</li>
 <li>Açılan pencereye şehir adını yazın (Örn: <code>Istanbul</code>, <code>Afyonkarahisar</code>, <code>Ankara</code>).</li>
+<li>Açılan pencereye ilçe adını yazın (Örn: <code>Kadıköy</code>, <code>Şebinkarahisar</code>, <code>Çankaya</code>).</li>
 <li><strong>Gönder</strong> butonuna tıklayın.</li>
 </ol>
 
