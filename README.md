@@ -38,7 +38,7 @@
 <li><strong>Real-time Data:</strong> Fetches current temperature, humidity, wind speed, pressure, and weather conditions.</li>
 <li><strong>Daily Forecast:</strong> Provides a 5-day weather forecast.</li>
 <li><strong>Easy Configuration:</strong> Setup directly via the Home Assistant UI (Config Flow).</li>
-<li><strong>Multi-City Support:</strong> Add as many cities as you like.</li>
+<li><strong>Multi-City Support:</strong> Add as many provinces and districts as you like.</li>
 <li><strong>Localized:</strong> Fully compatible with Turkish locations and weather codes.</li>
 </ul>
 
@@ -53,7 +53,7 @@
 <ol>
 <li>Open <strong>HACS</strong> in Home Assistant.</li>
 <li>Go to <strong>Integrations</strong> > click the 3 dots in the top right corner > <strong>Custom repositories</strong>.</li>
-<li>Paste the URL of this repository: <code>https://github.com/taskinfa/mgm-weather</code></li>
+<li>Paste the URL of this repository: <code>https://github.com/mutlutekir/mgm-weather</code></li>
 <li>Select <strong>Integration</strong> as the category and click <strong>Add</strong>.</li>
 <li>Search for <strong>"MGM Hava Durumu (FT)"</strong> and install it.</li>
 <li><strong>Restart</strong> Home Assistant.</li>
@@ -61,7 +61,7 @@
 
 <h4>Method 2: Manual</h4>
 <ol>
-<li>Download the <a href="https://github.com/taskinfa/mgm-weather/releases">latest release</a>.</li>
+<li>Download the <a href="https://github.com/mutlutekir/mgm-weather/releases">latest release</a>.</li>
 <li>Copy the <code>custom_components/mgm_weather</code> folder to your Home Assistant's <code>custom_components</code> directory.</li>
 <li><strong>Restart</strong> Home Assistant.</li>
 </ol>
@@ -77,6 +77,7 @@
 <li>Click <strong>+ ADD INTEGRATION</strong> in the bottom right corner.</li>
 <li>Search for <strong>"MGM Hava Durumu (FT)"</strong>.</li>
 <li>Enter your city name (e.g., <code>Istanbul</code>, <code>Afyonkarahisar</code>, <code>Ankara</code>) in the popup box.</li>
+<li>Enter your district name if you want (e.g., <code>Kadıköy</code>, <code>Şebinkarahisar</code>, <code>Çankaya</code>) in the popup box.</li>
 <li>Click <strong>Submit</strong>.</li>
 </ol>
 
