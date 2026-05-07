@@ -46,7 +46,7 @@
 
 <h4>Method 1: HACS (Recommended)</h4>
 
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=taskinfa&repository=mgm-weather&category=integration" target="_blank">
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank">
 <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.">
 </a>
 
@@ -125,7 +125,7 @@ columns: full</code></pre>
 
 <h4>Yöntem 1: HACS (Önerilen)</h4>
 
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=taskinfa&repository=mgm-weather&category=integration" target="_blank">
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank">
 <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Home Assistant örneğinizi açın ve Home Assistant Topluluk Mağazası içinde bir depo açın.">
 </a>
 
