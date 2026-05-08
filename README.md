@@ -1,7 +1,7 @@
 <h1 align="center">MGM Weather - Home Assistant Integration</h1>
 
 <div align="center">
-<img src="https://github.com/user-attachments/assets/ac0bd2e5-035c-4c47-a6c2-877c08a061b2" alt="mgm-weather" width="100%">
+<img src="" alt="mgm-weather" width="100%">
 
 <a href="https://github.com/hacs/integration">
 <img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge" alt="HACS">
