@@ -77,19 +77,58 @@
 <li>Click <strong>Submit</strong>.</li>
 </ol>
 
-<h3>📊 Dashboard Card Example</h3>
-<p>You can use the standard weather card or a custom card like Mushroom.</p>
+<h3>📊 Dashboard Card Examples</h3>
 
-<pre><code class="language-yaml">type: weather-forecast
-entity: weather.mgm_weather_mgm_afyonkarahisar
+<h4>3-Hourly Forecast Card</h4>
+<pre><code class="language-yaml">show_current: false
+show_forecast: true
+type: weather-forecast
+entity: weather.karabuk_merkez_saatlik
+forecast_type: hourly
+grid_options:
+  rows: auto
+forecast_slots: 24
+</code></pre>
+
+<h4>Current & 5-Day Forecast Card (Detailed)</h4>
+<p>Note: This example uses <code>custom:weather-forecast-card</code> and <code>card_mod</code>.</p>
+<pre><code class="language-yaml">type: custom:weather-forecast-card
+entity: weather.karabuk_safranbolu_hava_durumu
+name: Detaylı Hava Durumu
 show_current: true
 show_forecast: true
-forecast_type: hourly # Can be daily or hourly
-name: Afyonkarahisar
-forecast_slots: 6
-grid_options:
-  rows: 4
-  columns: full
+show_condition_effects: true
+default_forecast: daily
+current:
+  temperature_entity: sensor.dis_termometre_sicaklik
+  humidity_entity: sensor.dis_termometre_nem
+  temperature_precision: 1
+  show_attributes:
+    - pressure
+    - wind_speed
+    - uv_index
+    - apparent_temperature
+    - visibility
+    - cloud_coverage
+forecast:
+  mode: chart
+  show_attribute_selector: true
+  use_color_thresholds: true
+  show_sun_times: true
+  extra_attribute: precipitation_probability
+  temperature_precision: 0
+  default_chart_attribute: temperature_and_precipitation
+card_mod:
+  style: |
+    ha-card {
+      min-height: 480px;
+      --ha-font-size-3xl: 52px;
+      --ha-font-size-xl: 28px;
+      --ha-font-size-m: 16px;
+      border-radius: 28px;
+      background: rgba(0, 0, 0, 0.3) !important;
+      box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
+    }
 </code></pre>
 
 <h3>❤️ Credits & Disclaimer</h3>
@@ -160,19 +199,58 @@ grid_options:
 <li><strong>Gönder</strong> butonuna tıklayın.</li>
 </ol>
 
-<h3>📊 Kart Örneği</h3>
-<p>Standart hava durumu kartını veya Mushroom gibi özel kartları kullanabilirsiniz.</p>
+<h3>📊 Dashboard Kart Örnekleri</h3>
 
-<pre><code class="language-yaml">type: weather-forecast
-entity: weather.mgm_weather_mgm_afyonkarahisar
+<h4>3 Saatlik Hava Durumu Kartı</h4>
+<pre><code class="language-yaml">show_current: false
+show_forecast: true
+type: weather-forecast
+entity: weather.karabuk_merkez_saatlik
+forecast_type: hourly
+grid_options:
+  rows: auto
+forecast_slots: 24
+</code></pre>
+
+<h4>Anlık ve 5 Günlük Detaylı Hava Durumu Kartı</h4>
+<p>Not: Bu kart için <code>custom:weather-forecast-card</code> ve <code>card_mod</code> eklentileri gereklidir.</p>
+<pre><code class="language-yaml">type: custom:weather-forecast-card
+entity: weather.karabuk_safranbolu_hava_durumu
+name: Detaylı Hava Durumu
 show_current: true
 show_forecast: true
-forecast_type: hourly # Günlük (daily) veya saatlik (hourly) olarak değiştirilebilir
-name: Afyonkarahisar
-forecast_slots: 6
-grid_options:
-  rows: 4
-  columns: full
+show_condition_effects: true
+default_forecast: daily
+current:
+  temperature_entity: sensor.dis_termometre_sicaklik
+  humidity_entity: sensor.dis_termometre_nem
+  temperature_precision: 1
+  show_attributes:
+    - pressure
+    - wind_speed
+    - uv_index
+    - apparent_temperature
+    - visibility
+    - cloud_coverage
+forecast:
+  mode: chart
+  show_attribute_selector: true
+  use_color_thresholds: true
+  show_sun_times: true
+  extra_attribute: precipitation_probability
+  temperature_precision: 0
+  default_chart_attribute: temperature_and_precipitation
+card_mod:
+  style: |
+    ha-card {
+      min-height: 480px;
+      --ha-font-size-3xl: 52px;
+      --ha-font-size-xl: 28px;
+      --ha-font-size-m: 16px;
+      border-radius: 28px;
+      background: rgba(0, 0, 0, 0.3) !important;
+      box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
+    }
 </code></pre>
 
 <h3>❤️ Emeği Geçenler & Yasal Uyarı</h3>
