@@ -25,7 +25,7 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-# CONF_DISTRICT eklendi
+# const.py dosyasından gelen tanımlamalar
 from .const import DOMAIN, SCAN_INTERVAL_SECONDS, CONF_CITY, CONF_DISTRICT
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,15 +44,45 @@ def clear_tr_characters(text):
     return text.lower()
 
 def map_mgm_condition(mgm_code):
-    """MGM hava durumu kodlarını Home Assistant ikonlarına çevir."""
+    """MGM hava durumu kodlarını Home Assistant STANDART durumlarına çevir."""
+    # Uyarı: Burası standart HA durumları olmak zorundadır, kartların bozulmaması için MDI ikonu yazılamaz.
     mapping = {
-        "A": "sunny", "AB": "partlycloudy", "PB": "partlycloudy", "CB": "cloudy",
-        "HY": "rainy", "SY": "rainy", "KSY": "pouring", "Y": "rainy", "KY": "pouring",
-        "KKY": "snowy-rainy", "HKY": "snowy", "K": "snowy", "YKY": "snowy",
-        "SIS": "fog", "PUS": "fog", "D": "fog", "GSY": "lightning-rainy",
-        "KGY": "lightning-rainy", "DY": "hail", "R": "windy"
+        "A": "sunny", "SCK": "sunny", "SGK": "sunny",
+        "AB": "partlycloudy", "PB": "partlycloudy", 
+        "CB": "cloudy",
+        "HY": "rainy", "HSY": "rainy", "YYSY": "rainy", "MSY": "rainy", "Y": "rainy", "SY": "rainy",
+        "KY": "pouring", "KSY": "pouring",
+        "KKY": "snowy-rainy", 
+        "HK": "snowy", "HKY": "snowy", "K": "snowy", "YK": "snowy", "YKY": "snowy",
+        "SIS": "fog", "PUS": "fog", "DMN": "fog", "DUMAN": "fog", 
+        "D": "hail", "DY": "hail", 
+        "GSY": "lightning-rainy", "KGY": "lightning-rainy", "KGSY": "lightning-rainy",
+        "R": "windy", "GKR": "windy-variant", "KKR": "windy-variant",
+        "KF": "exceptional"
     }
     return mapping.get(mgm_code, "exceptional")
+
+def get_mgm_icon(mgm_code):
+    """MGM hava durumu kodlarını ÖZEL MDI ikonlarına çevir."""
+    # Arayüzde ve varlıklarda görünecek detaylı özel ikonlar buradadır.
+    mapping = {
+        "A": "mdi:weather-sunny", "SCK": "mdi:weather-sunny", "SGK": "mdi:weather-sunny",
+        "AB": "mdi:weather-partly-cloudy", "PB": "mdi:weather-partly-cloudy", 
+        "CB": "mdi:weather-cloudy",
+        "HY": "mdi:weather-partly-rainy", "HSY": "mdi:weather-partly-rainy", 
+        "YYSY": "mdi:weather-partly-rainy", "MSY": "mdi:weather-partly-rainy",
+        "Y": "mdi:weather-rainy", "SY": "mdi:weather-rainy",
+        "KY": "mdi:weather-pouring", "KSY": "mdi:weather-pouring",
+        "KKY": "mdi:weather-partly-snowy-rainy", 
+        "HK": "mdi:weather-snowy", "HKY": "mdi:weather-snowy", "K": "mdi:weather-snowy", "YK": "mdi:weather-snowy", "YKY": "mdi:weather-snowy",
+        "SIS": "mdi:weather-fog", "PUS": "mdi:weather-fog", "DMN": "mdi:weather-fog", "DUMAN": "mdi:weather-fog", 
+        "D": "mdi:weather-hail", "DY": "mdi:weather-hail",
+        "GSY": "mdi:weather-lightning-rainy", "KGY": "mdi:weather-lightning-rainy", "KGSY": "mdi:weather-lightning-rainy", 
+        "R": "mdi:weather-cloudy-arrow-right", "GKR": "mdi:weather-cloudy-arrow-right", "KKR": "mdi:weather-cloudy-arrow-right",
+        "KF": "mdi:weather-dust"
+    }
+    return mapping.get(mgm_code, "mdi:cloud")
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -100,7 +130,7 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                     il_adi = clear_tr_characters(self.city)
                     aranan_ilce = clear_tr_characters(self.district)
                     
-                    # DOĞRUDAN API'DEN İLÇEYİ ÇAĞIRAN YENİ MANTIK
+                    # DOĞRUDAN API'DEN İLÇEYİ ÇAĞIRAN MANTIK
                     if aranan_ilce:
                         merkez_url = f"https://servis.mgm.gov.tr/web/merkezler?il={il_adi}&ilce={aranan_ilce}"
                     else:
@@ -111,7 +141,6 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                             raise UpdateFailed(f"API Hatası (Merkezler): {resp.status}")
                         merkezler = await resp.json()
 
-                    # Artık döngüye gerek yok, API direkt istediğimiz tek istasyonu gönderiyor
                     merkez_id = None
                     if merkezler:
                         merkez_id = merkezler[0].get("merkezId")
@@ -136,6 +165,7 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                     # 4. Veriyi HA formatına çevir
                     result = {
                         "condition": map_mgm_condition(sd.get("hadiseKodu")),
+                        "mgm_code": sd.get("hadiseKodu"), # Özel MDI ikonu ataması için eklendi
                         "temperature": sd.get("sicaklik"),
                         "pressure": sd.get("aktuelBasinc"),
                         "humidity": sd.get("nem"),
@@ -185,7 +215,16 @@ class MGMWeatherEntity(CoordinatorEntity, WeatherEntity):
         self._attr_name = f"{isim} Hava Durumu"
 
     @property
+    def icon(self) -> str | None:
+        """Entity için MGM koduna uygun özel MDI ikonunu döndürür."""
+        mgm_code = self.coordinator.data.get("mgm_code")
+        if mgm_code:
+            return get_mgm_icon(mgm_code)
+        return None
+
+    @property
     def condition(self) -> str | None:
+        """Home Assistant'ın standart arayüz bileşenleri için condition döndürür."""
         return self.coordinator.data.get("condition")
 
     @property
