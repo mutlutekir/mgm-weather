@@ -72,12 +72,33 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             async with async_timeout.timeout(25):
                 async with aiohttp.ClientSession() as session:
-                    il, ilce = clear_tr_characters(self.city), clear_tr_characters(self.district)
-                    m_url = f"https://servis.mgm.gov.tr/web/merkezler?il={il}&ilce={ilce}" if ilce else f"https://servis.mgm.gov.tr/web/merkezler?il={il}"
+                    il = clear_tr_characters(self.city)
+                    # Sadece il bilgisini kullanarak o ilin tüm istasyonlarını çekeceğiz
+                    m_url = f"https://servis.mgm.gov.tr/web/merkezler?il={il}"
+                    
                     async with session.get(m_url, headers=headers) as r: 
                         merkezler = await r.json()
+                        
+                    m_id = None
+                    s_id = None
+                    
+                    # Eğer kullanıcı ilçe girdiyse, dönen listede arama yapıyoruz
+                    if self.district:
+                        hedef_ilce = clear_tr_characters(self.district)
+                        for istasyon in merkezler:
+                            mgm_ilce = clear_tr_characters(istasyon.get("ilce", ""))
+                            if mgm_ilce == hedef_ilce:
+                                m_id = istasyon.get("merkezId")
+                                s_id = istasyon.get("saatlikTahminIstNo", m_id)
+                                break
+                    
+                    # Eğer ilçe eşleşmediyse veya kullanıcı sadece il girdiyse, il merkezini (ilk kaydı) al
+                    if not m_id and merkezler:
                         m_id = merkezler[0].get("merkezId")
                         s_id = merkezler[0].get("saatlikTahminIstNo", m_id)
+
+                    if not m_id:
+                        raise ValueError("İl veya ilçe bulunamadı.")
 
                     async with session.get(f"https://servis.mgm.gov.tr/web/sondurumlar?merkezid={m_id}", headers=headers) as r: sd = (await r.json())[0]
                     async with session.get(f"https://servis.mgm.gov.tr/web/tahminler/gunluk?istno={m_id}", headers=headers) as r: td_list = await r.json()
