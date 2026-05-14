@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 # Kullanıcıdan istenecek veri şeması (Şehir ve İlçe)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_CITY, default="Istanbul"): str,
+        vol.Required(CONF_CITY, default=""): str,
         vol.Optional(CONF_DISTRICT, default=""): str, # İlçe alanı eklendi
     }
 )
