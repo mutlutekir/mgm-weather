@@ -1,12 +1,12 @@
 {
   "domain": "mgm_weather",
-  "name": "MGM Hava Durumu (FT)",
-  "codeowners": ["@taskinfa"],
+  "name": "MGM Hava Durumu (MT)",
+  "codeowners": ["@mutlutekir"],
   "config_flow": true,
-  "documentation": "https://github.com/taskinfa/mgm-weather",
+  "documentation": "https://github.com/mutlutekir/mgm-weather",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/taskinfa/mgm-weather/issues",
+  "issue_tracker": "https://github.com/mutlutekir/mgm-weather/issues",
   "requirements": [],
-  "version": "1.0.2"
+  "version": "1.0.5"
 
 }
