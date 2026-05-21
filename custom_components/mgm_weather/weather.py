@@ -32,29 +32,77 @@ def clear_tr_characters(text):
     for tr, eng in replacements.items(): text = text.replace(tr, eng)
     return text.lower()
 
-def map_mgm_condition(mgm_code):
+def map_mgm_condition(mgm_code, is_day=True):
+    """MGM hava durumu kodlarını Home Assistant STANDART durumlarına çevir."""
     mapping = {
-        "A": "sunny", "SCK": "sunny", "SGK": "sunny", "AB": "partlycloudy", "PB": "partlycloudy",
-        "CB": "cloudy", "HY": "rainy", "HSY": "rainy", "YYSY": "rainy", "MSY": "rainy", "Y": "rainy", "SY": "rainy",
-        "KY": "pouring", "KSY": "pouring", "KKY": "snowy-rainy", "HK": "snowy", "HKY": "snowy", "K": "snowy", "YK": "snowy", "YKY": "snowy",
-        "SIS": "fog", "PUS": "fog", "DMN": "fog", "DUMAN": "fog", "D": "hail", "DY": "hail",
-        "GSY": "lightning-rainy", "KGY": "lightning-rainy", "KGSY": "lightning-rainy", "R": "windy", "GKR": "windy-variant", "KKR": "windy-variant", "KF": "exceptional"
+        "A": "sunny", "SCK": "sunny", "SGK": "sunny", 
+        "AB": "partlycloudy", "PB": "partlycloudy",
+        "CB": "cloudy", 
+        "HY": "rainy", "HSY": "rainy", "YYSY": "rainy", "MSY": "rainy", "Y": "rainy", "SY": "rainy",
+        "KY": "pouring", "KSY": "pouring", "KKY": "snowy-rainy", 
+        "HK": "snowy", "HKY": "snowy", "K": "snowy", "YK": "snowy", "YKY": "snowy",
+        "SIS": "fog", "PUS": "fog", "DMN": "fog", "DUMAN": "fog", "KF": "fog",
+        "D": "hail", "DY": "hail",
+        "GSY": "lightning-rainy", "KGY": "lightning-rainy", "KGSY": "lightning-rainy", 
+        "R": "windy", "GKR": "windy", "KKR": "windy", "FIRT": "windy"
     }
-    return mapping.get(mgm_code, "exceptional")
+    cond = mapping.get(mgm_code, "partlycloudy")
+    # Gece modunda, hava güneşli (sunny) ise bunu açık geceye (clear-night) çevir.
+    if not is_day and cond == "sunny":
+        return "clear-night"
+    return cond
 
-def get_mgm_icon(mgm_code):
+def get_mgm_icon(mgm_code, is_day=True):
+    """MGM kodlarını senin belirlediğin MDI ikonlarıyla eşleştirir (Gece/Gündüz duyarlı)."""
     mapping = {
-        "A": "mdi:weather-sunny", "SCK": "mdi:weather-sunny", "SGK": "mdi:weather-sunny", "AB": "mdi:weather-partly-cloudy", "PB": "mdi:weather-partly-cloudy",
-        "CB": "mdi:weather-cloudy", "HY": "mdi:weather-partly-rainy", "HSY": "mdi:weather-partly-rainy", "YYSY": "mdi:weather-partly-rainy", "MSY": "mdi:weather-partly-rainy",
-        "Y": "mdi:weather-rainy", "SY": "mdi:weather-rainy", "KY": "mdi:weather-pouring", "KSY": "mdi:weather-pouring", "KKY": "mdi:weather-partly-snowy-rainy",
-        "HK": "mdi:weather-snowy", "HKY": "mdi:weather-snowy", "K": "mdi:weather-snowy", "YK": "mdi:weather-snowy", "YKY": "mdi:weather-snowy",
-        "SIS": "mdi:weather-fog", "PUS": "mdi:weather-fog", "DMN": "mdi:weather-fog", "DUMAN": "mdi:weather-fog", "D": "mdi:weather-hail", "DY": "mdi:weather-hail",
+        "A": "mdi:weather-sunny", "SCK": "mdi:weather-sunny", "SGK": "mdi:weather-sunny", 
+        "AB": "mdi:weather-partly-cloudy", "PB": "mdi:weather-partly-cloudy",
+        "CB": "mdi:weather-cloudy", 
+        "HY": "mdi:weather-partly-rainy", 
+        "HSY": "mdi:weather-rainy", "YYSY": "mdi:weather-rainy", "MSY": "mdi:weather-rainy",
+        "Y": "mdi:weather-rainy", "SY": "mdi:weather-rainy", 
+        "KY": "mdi:weather-pouring", "KSY": "mdi:weather-pouring", 
+        "KKY": "mdi:weather-partly-snowy-rainy", "HKY": "mdi:weather-partly-snowy-rainy",
+        "YKY": "mdi:weather-snowy-rainy",
+        "HK": "mdi:weather-partly-snowy", "K": "mdi:weather-snowy", "YK": "mdi:weather-snowy-heavy",
+        "SIS": "mdi:weather-fog", 
+        "PUS": "mdi:weather-hazy", "DMN": "mdi:weather-hazy", "DUMAN": "mdi:weather-hazy", 
+        "KF": "mdi:weather-dust",
+        "D": "mdi:weather-hail", "DY": "mdi:weather-hail",
         "GSY": "mdi:weather-lightning-rainy", "KGY": "mdi:weather-lightning-rainy", "KGSY": "mdi:weather-lightning-rainy",
-        "R": "mdi:weather-cloudy-arrow-right", "GKR": "mdi:weather-cloudy-arrow-right", "KKR": "mdi:weather-cloudy-arrow-right", "KF": "mdi:weather-dust"
+        "R": "mdi:weather-windy-variant", 
+        "GKR": "mdi:weather-windy", "KKR": "mdi:weather-windy", "FIRT": "mdi:weather-hurricane-outline"
     }
-    return mapping.get(mgm_code, "mdi:cloud")
+    icon = mapping.get(mgm_code, "mdi:weather-partly-cloudy")
+    
+    # Gece ikon dönüşümleri
+    if not is_day:
+        if icon == "mdi:weather-sunny":
+            return "mdi:weather-night"
+        if icon == "mdi:weather-partly-cloudy":
+            return "mdi:weather-night-partly-cloudy"
+            
+    return icon
+
+def get_mgm_text(mgm_code):
+    """Arayüzde Kum Taşınımı vb. detayların Türkçe yazması için sözlük."""
+    mapping = {
+        "A": "Açık", "SCK": "Sıcak", "SGK": "Soğuk",
+        "AB": "Az Bulutlu", "PB": "Parçalı Bulutlu", "CB": "Çok Bulutlu",
+        "HY": "Hafif Yağmurlu", "HSY": "Hafif Sağanak Yağışlı", "YYSY": "Yer Yer Sağanak Yağışlı", "MSY": "Mevzi Sağanak Yağışlı",
+        "Y": "Yağmurlu", "SY": "Sağanak Yağışlı", "KY": "Kuvvetli Yağmurlu", "KSY": "Kuvvetli Sağanak Yağışlı",
+        "GSY": "Gökgürültülü Sağanak Yağışlı", "KGY": "Kuvvetli Gökgürültülü Sağanak Yağışlı", "KGSY": "Kuvvetli Gökgürültülü Sağanak Yağışlı",
+        "KKY": "Karla Karışık Yağmurlu", "HKY": "Hafif Karla Karışık Yağmurlu", "YKY": "Yoğun Karla Karışık Yağmurlu",
+        "HK": "Hafif Kar Yağışlı", "K": "Kar Yağışlı", "YK": "Yoğun Kar Yağışlı",
+        "SIS": "Sisli", "PUS": "Puslu", "DMN": "Dumanlı", "DUMAN": "Dumanlı",
+        "KF": "Kum Taşınımı",
+        "D": "Dolu", "DY": "Dolu Yağışlı",
+        "R": "Rüzgarlı", "GKR": "Kuvvetli Rüzgarlı", "KKR": "Kuvvetli Rüzgarlı", "FIRT": "Fırtına"
+    }
+    return mapping.get(mgm_code, "Bilinmiyor")
 
 async def async_setup_entry(hass, entry, async_add_entities):
+    # DOKUNULMADI: Senin çalışan kurulum yöntemin korundu.
     coordinator = hass.data[DOMAIN][entry.entry_id]
     city = entry.data.get(CONF_CITY, "Istanbul")
     district = entry.data.get(CONF_DISTRICT, "")
@@ -185,7 +233,7 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
 
                     # ── 7. Sonuç nesnesini oluştur ───────────────────────────────
                     res = {
-                        "condition": map_mgm_condition(sd.get("hadiseKodu")),
+                        "condition": map_mgm_condition(sd.get("hadiseKodu")), # Geçici atanıyor, entity'de gece kontrolüyle ezilecek
                         "mgm_code": sd.get("hadiseKodu"),
                         "temperature": sd.get("sicaklik"),
                         "pressure": sd.get("aktuelBasinc"),
@@ -204,16 +252,24 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                                 ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat(),
                                 "temperature": td.get(f"enYuksekGun{i}"),
                                 "templow": td.get(f"enDusukGun{i}"),
-                                "condition": map_mgm_condition(td.get(f"hadiseGun{i}")),
+                                "condition": map_mgm_condition(td.get(f"hadiseGun{i}"), True), # Günlük tahminler hep gündüz sayılır
                                 "precipitation": 0,
                             })
 
                     if s_raw and "tahmin" in s_raw[0]:
                         for st in s_raw[0]["tahmin"]:
+                            tarih_str = st.get("tarih").replace(".000Z", "+00:00")
+                            try:
+                                # Saatlik tahminde ilgili saati ayıklayıp gece/gündüz ayrımı yapıyoruz
+                                hour = int(tarih_str[11:13])
+                                is_day_forecast = 6 <= hour < 19
+                            except Exception:
+                                is_day_forecast = True
+                                
                             res["forecast_hourly"].append({
-                                "datetime": st.get("tarih").replace(".000Z", "+00:00"),
+                                "datetime": tarih_str,
                                 "temperature": st.get("sicaklik"),
-                                "condition": map_mgm_condition(st.get("hadise")),
+                                "condition": map_mgm_condition(st.get("hadise"), is_day_forecast),
                                 "humidity": st.get("nem"),
                                 "wind_speed": st.get("ruzgarHizi"),
                                 "precipitation": 0,
@@ -245,9 +301,23 @@ class MGMWeatherEntity(CoordinatorEntity, WeatherEntity):
             self._attr_supported_features = WeatherEntityFeature.FORECAST_HOURLY
 
     @property
-    def icon(self): return get_mgm_icon(self.coordinator.data.get("mgm_code"))
+    def is_daytime(self) -> bool:
+        """Home Assistant'ın yerel güneş takip sistemini kontrol eder."""
+        sun_state = self.hass.states.get("sun.sun")
+        if sun_state:
+            return sun_state.state == "above_horizon"
+        return 6 <= datetime.now().hour < 19
+
     @property
-    def condition(self): return self.coordinator.data.get("condition")
+    def icon(self): 
+        mgm_code = self.coordinator.data.get("mgm_code")
+        return get_mgm_icon(mgm_code, self.is_daytime) if mgm_code else None
+
+    @property
+    def condition(self): 
+        mgm_code = self.coordinator.data.get("mgm_code")
+        return map_mgm_condition(mgm_code, self.is_daytime) if mgm_code else None
+
     @property
     def native_temperature(self): return self.coordinator.data.get("temperature")
     @property
@@ -256,6 +326,15 @@ class MGMWeatherEntity(CoordinatorEntity, WeatherEntity):
     def humidity(self): return self.coordinator.data.get("humidity")
     @property
     def native_wind_speed(self): return self.coordinator.data.get("wind_speed")
+
+    @property
+    def extra_state_attributes(self) -> dict[str, any] | None:
+        """Karta detayli_hadise ve mgm_hadise_kodu özelliklerini ekler."""
+        mgm_code = self.coordinator.data.get("mgm_code")
+        return {
+            "detayli_hadise": get_mgm_text(mgm_code) if mgm_code else "Bilinmiyor",
+            "mgm_hadise_kodu": mgm_code,
+        }
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
         return self.coordinator.data.get("forecast") if self._mode == "daily" else None
