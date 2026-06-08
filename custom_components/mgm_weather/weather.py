@@ -248,7 +248,7 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                         for i in range(1, 6):
                             res["forecast"].append({
                                 "datetime": (
-                                    datetime.now() + timedelta(days=i)
+                                    datetime.now() + timedelta(days=i - 1)
                                 ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat(),
                                 "temperature": td.get(f"enYuksekGun{i}"),
                                 "templow": td.get(f"enDusukGun{i}"),
