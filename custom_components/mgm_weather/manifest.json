@@ -7,6 +7,6 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/mutlutekir/mgm-weather/issues",
   "requirements": [],
-  "version": "1.0.7"
+  "version": "1.0.8"
 
 }
