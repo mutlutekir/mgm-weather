@@ -107,7 +107,7 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(hass, _LOGGER, name=f"MGM Weather {city} {district}", update_interval=timedelta(seconds=SCAN_INTERVAL_SECONDS))
         self.city, self.district = city, district
         self._station_cache = None 
-        self._last_success_time = None 
+        self._last_success_time = None # 6 Saatlik hafıza için eklendi
 
     async def _async_update_data(self):
         headers = {
@@ -189,18 +189,10 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                 if td_list:
                     td = td_list[0]
                     for i in range(1, 6):
-                        # MGM'nin gönderdiği KESİN tarihi çekiyoruz (örn: "2026-06-16T00:00:00.000Z")
-                        tarih_str = td.get(f"tarihGun{i}")
-                        
-                        if tarih_str:
-                            # Zaman dilimi uyumunu sağlayıp ISO formatına çevir
-                            dt_iso = tarih_str.replace(".000Z", "+00:00").replace("Z", "+00:00")
-                        else:
-                            # Çok düşük bir ihtimal de olsa MGM API'si tarihi göndermezse eski yedeğe dön
-                            dt_iso = (datetime.now() + timedelta(days=i - 1)).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-
                         res["forecast"].append({
-                            "datetime": dt_iso,
+                            "datetime": (
+                                datetime.now() + timedelta(days=i)
+                            ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat(),
                             "temperature": td.get(f"enYuksekGun{i}"),
                             "templow": td.get(f"enDusukGun{i}"),
                             "condition": map_mgm_condition(td.get(f"hadiseGun{i}"), True),
@@ -225,16 +217,20 @@ class MGMDataUpdateCoordinator(DataUpdateCoordinator):
                             "precipitation": 0,
                         })
 
+                # Veri başarıyla çekildiyse saati kaydet
                 self._last_success_time = datetime.now()
                 return res
 
         except Exception as e:
+            # HATA DURUMU MANTIĞI: Eğer hafızada veri varsa ve 6 saat geçmediyse, eski veriyi kullan ve çökme!
             if self.data and self._last_success_time:
                 time_since_last_success = datetime.now() - self._last_success_time
                 if time_since_last_success < timedelta(hours=6):
-                    _LOGGER.debug("MGM baglantisi kurulamadi. 6 saat dolmadigi icin eski veri gosteriliyor: %s", e)
+                    _LOGGER.debug("MGM baglantisi kurulamadi (%s). 6 saat dolmadigi icin eski veri gosteriliyor.", e)
                     return self.data
-            raise UpdateFailed(f"MGM Hatasi: {e}")
+                    
+            # 6 saati geçtiyse veya sistem daha hiç veri alamadan kilitlendiyse, o zaman hatayı bas
+            raise UpdateFailed(f"MGM Hatasi (En az 6 saattir guncel veri alinamiyor): {e}")
 
 
 class MGMWeatherEntity(CoordinatorEntity, WeatherEntity):
