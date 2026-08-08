@@ -1,617 +1,262 @@
-# 🌬️ Vestel AC — Home Assistant Integration
+<h1 align="center">MGM Weather - Home Assistant Integration</h1>
 
-<p align="center">
-  <a href="#english">🇬🇧 English</a>
-  &nbsp; | &nbsp;
-  <a href="#türkçe">🇹🇷 Türkçe</a>
-</p>
+<div align="center">
 
-<p align="center">
-  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=Vestel_Klima_AirCon&category=integration">
-    <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Install with HACS">
-  </a>
-  &nbsp;
-  <a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=vestel_ac">
-    <img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Add to Home Assistant">
-  </a>
-</p>
-
----
-
-<a id="english"></a>
-
-# 🇬🇧 English
-
-Vestel AC is an unofficial Home Assistant custom integration for Wi-Fi enabled Vestel Doğa / Flora series air conditioners.
-
-It communicates directly with the Vestel Smart Life cloud API and provides advanced controls that are not normally exposed by Home Assistant.
-
-> ⚠️ This is an unofficial community project and is not affiliated with Vestel.
-
-## ✨ Features
-
-- 🌡️ Cooling, heating, dry, fan-only and auto modes
-- 🎯 Target temperature control
-- 🌀 Auto + 1-5 fan speeds
-- ↕️ Vertical louver position control
-- 🔄 Vertical swing / stop swing
-- ↔️ Horizontal louver support where available
-- ⚡ Turbo mode
-- 🌙 Sleep mode
-- 🍃 Eco / Energy Saving mode
-- ✨ Ionizer
-- ⏰ Automatic shutdown timer
-- 🩺 Diagnostic information
-- 🌫️ VOC / particle air-quality information on supported models
-- 🧹 Filter / particle-sensor lifetime information where available
-- 🧪 Raw API status and command services
-- 🔐 Automatic authentication with Vestel account credentials
-
----
-
-## 🚀 Installation
-
-### HACS — Recommended
-
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=Vestel_Klima_AirCon&category=integration">
-  <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Install with HACS">
+<a href="https://github.com/hacs/integration">
+<img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge" alt="HACS">
+</a>
+<a href="https://github.com/mutlutekir/mgm-weather/releases">
+<img src="https://img.shields.io/github/v/release/mutlutekir/mgm-weather?style=for-the-badge&color=blue" alt="Release">
+</a>
+<a href="https://github.com/mutlutekir">
+<img src="https://img.shields.io/badge/maintainer-Mutlu%20Tekir-green?style=for-the-badge" alt="Maintainer">
 </a>
 
-Or manually:
+<h3>
+<a href="#english">🇬🇧 English</a> | <a href="#türkçe-kılavuz">🇹🇷 Türkçe</a>
+</h3>
+</div>
 
-1. Open HACS → Integrations.
-2. Open ⋮ → Custom repositories.
-3. Add:
+<hr>
 
-    https://github.com/mutlutekir/Vestel_Klima_AirCon
+<div id="english"></div>
 
-4. Select **Integration**.
-5. Install **Vestel AC**.
-6. Restart Home Assistant.
+<h2>🇬🇧 English</h2>
 
-### Manual
+<p>
+<strong>MGM Weather</strong> is a custom integration for Home Assistant that retrieves weather data from the Turkish State Meteorological Service (MGM) via a custom proxy API. It provides accurate, localized weather conditions and forecasts for cities and districts in Turkey.
+</p>
 
-Download the latest release and copy:
+<h3>🌟 Features & New Updates</h3>
+<ul>
+<li><strong>Real-time Data:</strong> Fetches current temperature, humidity, wind speed, pressure, and weather conditions.</li>
+<li><strong>District Support:</strong> Full support for getting localized weather data for districts, not just provinces.</li>
+<li><strong>Detailed Forecasts:</strong> Provides both a 5-day daily forecast and a <strong>3-hourly interval forecast</strong>.</li>
+<li><strong>MDI Icon Mapping:</strong> Missing MGM weather symbols are seamlessly mapped to the most appropriate Material Design Icons (MDI) for a native Home Assistant look.</li>
+<li><strong>Easy Configuration:</strong> Setup directly via the Home Assistant UI (Config Flow).</li>
+<li><strong>Multi-Location Support:</strong> Add as many provinces and districts as you like.</li>
+<li><strong>Localized:</strong> Fully compatible with Turkish locations and weather codes.</li>
+</ul>
 
-    custom_components/vestel_ac
+<h3>🚀 Installation</h3>
 
-to:
+<h4>Method 1: HACS (Recommended)</h4>
 
-    /config/custom_components/
-
-Then restart Home Assistant.
-
----
-
-## ⚙️ Configuration
-
-Go to:
-
-    Settings → Devices & Services → Add Integration
-
-Search for:
-
-    Vestel AC
-
-The integration supports:
-
-- Username / password login
-- Refresh-token authentication as a fallback
-
-After authentication, available Vestel air conditioners are automatically discovered.
-
----
-
-## 🎛️ Supported Controls
-
-| Feature | Support |
-|---|:---:|
-| Auto | ✅ |
-| Cooling | ✅ |
-| Heating | ✅ |
-| Dry | ✅ |
-| Fan Only | ✅ |
-| Off | ✅ |
-| Target Temperature | ✅ |
-| Fan Auto / 1-5 | ✅ |
-| Vertical Louver | ✅ |
-| Vertical Swing | ✅ |
-| Horizontal Louver | ⚠️ Model dependent |
-| Turbo | ✅ |
-| Sleep | ✅ |
-| Eco | ✅ |
-| Ionizer | ✅ |
-| Auto Off Timer | ✅ |
-| Diagnostics | ✅ |
-| VOC / PM | ⚠️ Model dependent |
-| Filter Lifetime | ⚠️ Model dependent |
-
----
-
-## 🔬 Reverse-Engineered Parameters
-
-The following values were identified from the Vestel Smart Life APK and verified against a real air conditioner.
-
-### ACCMODE
-
-| Value | Mode |
-|---:|---|
-| `0` | Auto |
-| `1` | Cooling |
-| `2` | Dry |
-| `3` | Fan Only |
-| `4` | Heating |
-| `5` | Off |
-
-### ACGENSI
-
-The mode and fan speed are combined using:
-
-    ACGENSI = ACCMODE + FanSpeed × 8
-
-### ACFANPO
-
-`ACFANPO` contains several settings as bit fields:
-
-| Bits | Function |
-|---|---|
-| 0 | Turbo |
-| 1-3 | Vertical louver |
-| 4-6 | Horizontal louver |
-| 7 | Sleep |
-| 8 | Ionizer |
-| 9 | Eco |
-
-Vertical louver values:
-
-| Value | Position |
-|---:|---|
-| `0` | Stop |
-| `1` | Position 1 |
-| `2` | Position 2 |
-| `3` | Position 3 |
-| `4` | Position 4 |
-| `5` | Position 5 |
-| `6` | Swing |
-
-### Verified Vertical Louver Values
-
-| Function | ACFANPO |
-|---|---:|
-| Top position | `00050` |
-| Position 2 | `00052` |
-| Position 3 | `00054` |
-| Position 4 | `00056` |
-| Bottom position | `00058` |
-| Swing | `00060` |
-| Stop / fixed position | `00048` |
-
-### Verified Special Modes
-
-| Function | Value |
-|---|---:|
-| Normal | `00050` |
-| Sleep | `00178` |
-| Ionizer | `00306` |
-| Eco | `00562` |
-
-Turbo is reflected in the `ACGENSI` state and was observed as:
-
-    ACGENSI = 00025
-
----
-
-## ⏰ Automatic Shutdown
-
-`ACOFFTV` stores the automatic shutdown time:
-
-    ACOFFTV = (minutes << 5) | hours
-
-The value:
-
-    2047
-
-means the timer is disabled.
-
-Example:
-
-    14:18 → 00590
-
----
-
-## 🩺 Diagnostic Data
-
-The APK exposes additional diagnostic fields. Availability depends on the air-conditioner model and firmware.
-
-| Field | Description |
-|---|---|
-| `ACERROR` | Error information |
-| `ACERRTW` | UVC / particle sensor errors |
-| `ACWARNG` | Warning information |
-| `ACPOLVC` | VOC air quality |
-| `ACPOLPM` | Particle / PM air quality |
-| `ACOAFLP` | Odor & allergen filter lifetime |
-| `ACPSCLP` | Particle sensor lifetime |
-| `ACSAFRS` | Filter / sensor reset |
-| `ACVERSI` | Firmware information |
-
-Some fields may not be returned by the device. Missing capabilities are therefore not considered an error.
-
----
-
-## 🧪 Raw API Services
-
-For advanced testing and feature discovery, the integration provides raw API services.
-
-### Dump current device status
-
-    vestel_ac.dump_raw_status
-
-### Send a raw command
-
-    vestel_ac.send_raw_code
-
-Example:
-
-    action: vestel_ac.send_raw_code
-    data:
-      code: "ACFANPO00562"
-
-These services are mainly intended for development and reverse engineering.
-
-> ⚠️ Do not send unknown values to the device. Incorrect commands may change its operating state.
-
----
-
-## 🔍 Feature Discovery
-
-New features can be investigated by comparing the raw status before and after changing a setting in the official Vestel application.
-
-Recommended workflow:
-
-    dump_raw_status
-          ↓
-    Change one setting
-          ↓
-    dump_raw_status
-          ↓
-    Compare changed fields
-          ↓
-    Test the discovered value
-          ↓
-    Add the feature to Home Assistant
-
----
-
-## ❤️ Credits
-
-**Home Assistant integration:**  
-Mutlu Tekir
-
-**Original Vestel API research:**  
-Sezer İltekin
-
-**Original project:**  
-https://github.com/iltekin/vestel-ac-remote-control
-
-The original API research provided the foundation for communicating with the Vestel cloud service. This integration extends that work with Home Assistant support and additional features discovered through APK analysis and real-device testing.
-
----
-
-## ⚠️ Disclaimer
-
-This project is unofficial and is not affiliated with Vestel.
-
-The integration relies on the Vestel cloud API. API changes, authentication changes or service shutdowns by Vestel may cause the integration to stop working.
-
-Some features are model and firmware dependent.
-
-If you encounter a problem, please open an issue:
-
-https://github.com/mutlutekir/Vestel_Klima_AirCon/issues
-
-Do not include passwords, access tokens or refresh tokens in issue reports.
-
----
-
-<a id="türkçe"></a>
-
-# 🇹🇷 Türkçe
-
-Vestel AC, Wi-Fi destekli Vestel Doğa / Flora serisi klimaları Home Assistant üzerinden kontrol etmek için geliştirilmiş resmi olmayan bir özel entegrasyondur.
-
-Vestel Akıllı Yaşam bulut API'si ile doğrudan iletişim kurar ve Home Assistant'ta normalde bulunmayan gelişmiş klima kontrollerini sunar.
-
-> ⚠️ Bu proje resmi değildir ve Vestel ile herhangi bir bağlantısı yoktur.
-
-## ✨ Özellikler
-
-- 🌡️ Soğutma, ısıtma, nem alma, fan ve otomatik mod
-- 🎯 Hedef sıcaklık kontrolü
-- 🌀 Auto + 1-5 fan hızı
-- ↕️ Dikey kanatçık pozisyonu
-- 🔄 Dikey salınım / salınımı durdurma
-- ↔️ Desteklenen modellerde yatay kanatçık
-- ⚡ Turbo
-- 🌙 Uyku
-- 🍃 Tasarruf / Eco
-- ✨ İyonizer
-- ⏰ Otomatik kapatma zamanlayıcısı
-- 🩺 Tanı / hata bilgileri
-- 🌫️ Desteklenen modellerde VOC / partikül hava kalitesi
-- 🧹 Desteklenen modellerde filtre / partikül sensörü ömrü
-- 🧪 Ham API durum ve komut servisleri
-- 🔐 Vestel hesabıyla otomatik kimlik doğrulama
-
----
-
-## 🚀 Kurulum
-
-### HACS — Önerilen
-
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=Vestel_Klima_AirCon&category=integration">
-  <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="HACS ile yükle">
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank">
+<img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.">
 </a>
 
-Alternatif olarak:
-
-1. Home Assistant'ta HACS → Integrations bölümünü açın.
-2. Sağ üstten ⋮ → Custom repositories seçin.
-3. Aşağıdaki adresi ekleyin:
-
-    https://github.com/mutlutekir/Vestel_Klima_AirCon
-
-4. Kategori olarak **Integration** seçin.
-5. **Vestel AC** entegrasyonunu yükleyin.
-6. Home Assistant'ı yeniden başlatın.
-
-### Manuel
-
-Son sürümü indirin ve:
-
-    custom_components/vestel_ac
-
-klasörünü:
-
-    /config/custom_components/
-
-içine kopyalayın.
-
-Ardından Home Assistant'ı yeniden başlatın.
-
----
-
-## ⚙️ Yapılandırma
-
-Şuraya gidin:
-
-    Ayarlar → Cihazlar ve Hizmetler → Entegrasyon Ekle
-
-Aratın:
-
-    Vestel AC
-
-Kimlik doğrulama için:
-
-- Kullanıcı adı / şifre
-- Yedek olarak Refresh Token
-
-kullanılabilir.
-
-Kimlik doğrulama tamamlandıktan sonra kullanılabilir Vestel klimalar otomatik olarak keşfedilir.
-
----
-
-## 🎛️ Desteklenen Kontroller
-
-| Özellik | Destek |
-|---|:---:|
-| Otomatik | ✅ |
-| Soğutma | ✅ |
-| Isıtma | ✅ |
-| Nem Alma | ✅ |
-| Sadece Fan | ✅ |
-| Kapalı | ✅ |
-| Hedef Sıcaklık | ✅ |
-| Fan Auto / 1-5 | ✅ |
-| Dikey Kanatçık | ✅ |
-| Dikey Salınım | ✅ |
-| Yatay Kanatçık | ⚠️ Modele bağlı |
-| Turbo | ✅ |
-| Uyku | ✅ |
-| Tasarruf | ✅ |
-| İyonizer | ✅ |
-| Otomatik Kapatma | ✅ |
-| Tanı Bilgileri | ✅ |
-| VOC / PM | ⚠️ Modele bağlı |
-| Filtre Ömrü | ⚠️ Modele bağlı |
-
----
-
-## 🔬 Çözümlenen Parametreler
-
-Bu değerler Vestel Akıllı Yaşam APK'sından araştırılmış ve gerçek bir klima üzerinde doğrulanmıştır.
-
-### ACCMODE
-
-| Değer | Mod |
-|---:|---|
-| `0` | Otomatik |
-| `1` | Soğutma |
-| `2` | Nem Alma |
-| `3` | Sadece Fan |
-| `4` | Isıtma |
-| `5` | Kapalı |
-
-### ACGENSI
-
-Mod ve fan hızı birlikte kodlanır:
-
-    ACGENSI = ACCMODE + FanSpeed × 8
-
-### ACFANPO
-
-| Bitler | Özellik |
-|---|---|
-| 0 | Turbo |
-| 1-3 | Dikey kanatçık |
-| 4-6 | Yatay kanatçık |
-| 7 | Uyku |
-| 8 | İyonizer |
-| 9 | Tasarruf |
-
-Dikey kanatçık:
-
-| Değer | Pozisyon |
-|---:|---|
-| `0` | Durdur |
-| `1` | 1. kademe |
-| `2` | 2. kademe |
-| `3` | 3. kademe |
-| `4` | 4. kademe |
-| `5` | 5. kademe |
-| `6` | Salınım |
-
-### Doğrulanmış Dikey Kanatçık Değerleri
-
-| İşlev | ACFANPO |
-|---|---:|
-| En üst | `00050` |
-| 2. kademe | `00052` |
-| 3. kademe | `00054` |
-| 4. kademe | `00056` |
-| En alt | `00058` |
-| Salınım | `00060` |
-| Salınımı durdur | `00048` |
-
-### Doğrulanmış Özel Modlar
-
-| İşlev | Değer |
-|---|---:|
-| Normal | `00050` |
-| Uyku | `00178` |
-| İyonizer | `00306` |
-| Tasarruf | `00562` |
-
-Turbo için gerçek cihazda:
-
-    ACGENSI = 00025
-
-değeri gözlemlenmiştir.
-
----
-
-## ⏰ Otomatik Kapatma
-
-`ACOFFTV` otomatik kapanma saatini tutar:
-
-    ACOFFTV = (dakika << 5) | saat
-
-    2047 = zamanlayıcı kapalı
-
-Örneğin:
-
-    14:18 → 00590
-
----
-
-## 🩺 Tanı Bilgileri
-
-APK içerisinde aşağıdaki alanlar tespit edilmiştir. Kullanılabilirlik klima modeline ve firmware'e bağlıdır.
-
-| Alan | Açıklama |
-|---|---|
-| `ACERROR` | Hata bilgisi |
-| `ACERRTW` | UVC / partikül sensörü hatası |
-| `ACWARNG` | Uyarı |
-| `ACPOLVC` | VOC hava kalitesi |
-| `ACPOLPM` | Partikül / PM hava kalitesi |
-| `ACOAFLP` | Koku & alerjen filtre ömrü |
-| `ACPSCLP` | Partikül sensörü ömrü |
-| `ACSAFRS` | Filtre / sensör sıfırlama |
-| `ACVERSI` | Firmware bilgisi |
-
-Bazı cihazlarda bu alanlar hiç bulunmayabilir. Bu durumda ilgili özelliklerin kullanılamaması normaldir.
-
----
-
-## 🧪 Ham API Servisleri
-
-### Cihazın ham durumunu görüntüleme
-
-    vestel_ac.dump_raw_status
-
-### Ham komut gönderme
-
-    vestel_ac.send_raw_code
-
-Örnek:
-
-    action: vestel_ac.send_raw_code
-    data:
-      code: "ACFANPO00562"
-
-Bu servisler özellikle yeni özelliklerin araştırılması için kullanılabilir.
-
-> ⚠️ Ne yaptığını bilmediğiniz değerleri cihaza göndermeyin.
-
----
-
-## 🔍 Yeni Özellik Keşfetme
-
-Resmi uygulamadaki bir özelliği araştırmak için:
-
-    dump_raw_status
-          ↓
-    Uygulamadan özelliği değiştir
-          ↓
-    dump_raw_status
-          ↓
-    Değişen alanı bul
-          ↓
-    Değeri test et
-          ↓
-    Home Assistant'a ekle
-
-Bu yöntemle dikey kanatçık, salınım, Turbo, Uyku, İyonizer, Tasarruf, Fan modu ve zamanlayıcı gibi birçok özellik keşfedilmiştir.
-
----
-
-## ❤️ Emeği Geçenler
-
-**Home Assistant entegrasyonu:**  
-Mutlu Tekir
-
-**İlk Vestel API araştırması:**  
-Sezer İltekin
-
-**Temel proje:**  
-https://github.com/iltekin/vestel-ac-remote-control
-
-Bu entegrasyon, ilk API araştırmalarını temel alarak Home Assistant desteği ve APK / gerçek cihaz analizleriyle keşfedilen ek özellikleri bir araya getirir.
-
----
-
-## ⚠️ Yasal Uyarı
-
-Bu proje resmi değildir ve Vestel ile bağlantılı değildir.
-
-Entegrasyon Vestel'in bulut API'sine bağlıdır. API, kimlik doğrulama sistemi veya servis tarafında yapılacak değişiklikler entegrasyonun çalışmasını engelleyebilir.
-
-Bazı özellikler klima modeli ve firmware sürümüne bağlıdır.
-
-Sorun yaşarsanız:
-
-https://github.com/mutlutekir/Vestel_Klima_AirCon/issues
-
-üzerinden issue açabilirsiniz.
-
-> 🔒 Şifre, access token veya refresh token gibi bilgileri issue içerisinde paylaşmayın.
-
----
-
-<p align="center">
-  🌬️ <strong>Vestel AC + Home Assistant</strong>
-  <br>
-  <sub>Unofficial Community Integration</sub>
+<ol>
+<li>Open <strong>HACS</strong> in Home Assistant.</li>
+<li>Go to <strong>Integrations</strong> > click the 3 dots in the top right corner > <strong>Custom repositories</strong>.</li>
+<li>Paste the URL of this repository: <code>https://github.com/mutlutekir/mgm-weather</code></li>
+<li>Select <strong>Integration</strong> as the category and click <strong>Add</strong>.</li>
+<li>Search for <strong>"MGM Hava Durumu"</strong> and install it.</li>
+<li><strong>Restart</strong> Home Assistant.</li>
+</ol>
+
+<h4>Method 2: Manual</h4>
+<ol>
+<li>Download the <a href="https://github.com/mutlutekir/mgm-weather/releases">latest release</a>.</li>
+<li>Copy the <code>custom_components/mgm_weather</code> folder to your Home Assistant's <code>custom_components</code> directory.</li>
+<li><strong>Restart</strong> Home Assistant.</li>
+</ol>
+
+<h3>⚙️ Configuration</h3>
+
+<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=mgm_weather" target="_blank">
+<img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Open your Home Assistant instance and start setting up a new integration.">
+</a>
+
+<ol>
+<li>Go to <strong>Settings</strong> > <strong>Devices & Services</strong>.</li>
+<li>Click <strong>+ ADD INTEGRATION</strong> in the bottom right corner.</li>
+<li>Search for <strong>"MGM Hava Durumu"</strong>.</li>
+<li>Enter your city name (e.g., <code>Istanbul</code>, <code>Afyonkarahisar</code>, <code>Ankara</code>) in the popup box.</li>
+<li>Enter your district name if you want (e.g., <code>Kadıköy</code>, <code>Şebinkarahisar</code>, <code>Çankaya</code>) in the popup box.</li>
+<li>Click <strong>Submit</strong>.</li>
+</ol>
+
+<h3>📊 Dashboard Card Examples</h3>
+
+<h4>3-Hourly Forecast Card</h4>
+<pre><code class="language-yaml">show_current: false
+show_forecast: true
+type: weather-forecast
+entity: weather.karabuk_merkez_saatlik
+forecast_type: hourly
+grid_options:
+  rows: auto
+forecast_slots: 24
+</code></pre>
+
+<h4>Current & 5-Day Forecast Card (Detailed)</h4>
+<p>Note: This example uses <code>custom:weather-forecast-card</code> and <code>card_mod</code>.</p>
+<pre><code class="language-yaml">type: custom:weather-forecast-card
+entity: weather.karabuk_safranbolu_hava_durumu
+name: Detaylı Hava Durumu
+show_current: true
+show_forecast: true
+show_condition_effects: true
+default_forecast: daily
+current:
+  temperature_entity: sensor.dis_termometre_sicaklik
+  humidity_entity: sensor.dis_termometre_nem
+  temperature_precision: 1
+  show_attributes:
+    - pressure
+    - wind_speed
+    - uv_index
+    - apparent_temperature
+    - visibility
+    - cloud_coverage
+forecast:
+  mode: chart
+  show_attribute_selector: true
+  use_color_thresholds: true
+  show_sun_times: true
+  extra_attribute: precipitation_probability
+  temperature_precision: 0
+  default_chart_attribute: temperature_and_precipitation
+card_mod:
+  style: |
+    ha-card {
+      min-height: 480px;
+      --ha-font-size-3xl: 52px;
+      --ha-font-size-xl: 28px;
+      --ha-font-size-m: 16px;
+      border-radius: 28px;
+      background: rgba(0, 0, 0, 0.3) !important;
+      box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
+    }
+</code></pre>
+
+<h3>❤️ Credits & Disclaimer</h3>
+<ul>
+<li><strong>Developer:</strong> Mutlu Tekir</li>
+<li><strong>Original Developer / Special Thanks:</strong> Fatih Taşkın</li>
+<li><strong>Data Source:</strong> Turkish State Meteorological Service (MGM) via proxy API.</li>
+<li><em>This is a custom integration and is not officially affiliated with MGM.</em></li>
+</ul>
+
+<hr>
+
+<div id="türkçe-kılavuz"></div>
+
+<h2>🇹🇷 Türkçe Kılavuz</h2>
+
+<p>
+<strong>MGM Weather</strong>, Türkiye Meteoroloji Genel Müdürlüğü (MGM) verilerini özel bir proxy API üzerinden Home Assistant'a aktaran özel bir entegrasyondur. Türkiye'deki il ve ilçeler için en doğru anlık hava durumu ve tahmin verilerini sağlar.
 </p>
+
+<h3>🌟 Özellikler ve Yeni Güncellemeler</h3>
+<ul>
+<li><strong>Anlık Veri:</strong> Sıcaklık, nem, rüzgar hızı, basınç ve hava durumu ikonunu anlık çeker.</li>
+<li><strong>İlçe Desteği:</strong> Sadece iller için değil, artık ilçeler bazında da tam uyumlu hava durumu desteği sunar.</li>
+<li><strong>Detaylı Tahmin:</strong> 5 günlük hava tahminine ek olarak <strong>3 saatlik aralıklarla saatlik hava tahmini</strong> eklendi.</li>
+<li><strong>MDI İkon Eşleştirme:</strong> MGM verilerinde karşılığı olmayan eksik hava durumu simgeleri, arayüzde sorun yaratmaması için uygun Material Design (MDI) ikonlarıyla eşleştirildi.</li>
+<li><strong>Kolay Kurulum:</strong> Home Assistant arayüzü üzerinden (Config Flow) saniyeler içinde kurulur.</li>
+<li><strong>Çoklu Lokasyon:</strong> İstediğiniz kadar farklı il ve ilçe ekleyebilirsiniz.</li>
+<li><strong>Yerelleştirilmiş:</strong> Türkiye lokasyonları ve MGM hava durumu kodlarıyla tam uyumludur.</li>
+</ul>
+
+<h3>🚀 Kurulum</h3>
+
+<h4>Yöntem 1: HACS (Önerilen)</h4>
+
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank">
+<img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Home Assistant örneğinizi açın ve Home Assistant Topluluk Mağazası içinde bir depo açın.">
+</a>
+
+<ol>
+<li>Home Assistant'ta <strong>HACS</strong> menüsünü açın.</li>
+<li><strong>Integrations</strong> (Entegrasyonlar) kısmına gidin > sağ üstteki üç noktaya tıklayın > <strong>Custom repositories</strong> (Özel depolar).</li>
+<li>Bu reponun adresini yapıştırın: <code>https://github.com/mutlutekir/mgm-weather</code></li>
+<li>Kategori olarak <strong>Integration</strong> seçin ve <strong>Ekle</strong> deyin.</li>
+<li>Listeden <strong>"MGM Hava Durumu"</strong> entegrasyonunu bulup indirin.</li>
+<li>Home Assistant'ı <strong>Yeniden Başlatın</strong>.</li>
+</ol>
+
+<h4>Yöntem 2: Manuel</h4>
+<ol>
+<li><a href="https://github.com/mutlutekir/mgm-weather/releases">En son sürümü</a> indirin.</li>
+<li><code>custom_components/mgm_weather</code> klasörünü Home Assistant dizininizdeki <code>custom_components</code> klasörünün içine kopyalayın.</li>
+<li>Home Assistant'ı <strong>Yeniden Başlatın</strong>.</li>
+</ol>
+
+<h3>⚙️ Yapılandırma</h3>
+
+<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=mgm_weather" target="_blank">
+<img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Home Assistant örneğinizi açın ve yeni bir entegrasyon ayarlamaya başlayın.">
+</a>
+
+<ol>
+<li><strong>Ayarlar</strong> > <strong>Cihazlar ve Hizmetler</strong> menüsüne gidin.</li>
+<li>Sağ alttaki <strong>+ ENTEGRASYON EKLE</strong> butonuna tıklayın.</li>
+<li>Arama kutusuna <strong>"MGM Hava Durumu"</strong> yazın.</li>
+<li>Açılan pencereye şehir adını yazın (Örn: <code>Istanbul</code>, <code>Afyonkarahisar</code>, <code>Ankara</code>).</li>
+<li>Açılan pencereye ilçe adını yazın (Örn: <code>Kadıköy</code>, <code>Şebinkarahisar</code>, <code>Çankaya</code>).</li>
+<li><strong>Gönder</strong> butonuna tıklayın.</li>
+</ol>
+
+<h3>📊 Dashboard Kart Örnekleri</h3>
+
+<h4>3 Saatlik Hava Durumu Kartı</h4>
+<pre><code class="language-yaml">show_current: false
+show_forecast: true
+type: weather-forecast
+entity: weather.karabuk_merkez_saatlik
+forecast_type: hourly
+grid_options:
+  rows: auto
+forecast_slots: 24
+</code></pre>
+
+<h4>Anlık ve 5 Günlük Detaylı Hava Durumu Kartı</h4>
+<p>Not: Bu kart için <code>custom:weather-forecast-card</code> ve <code>card_mod</code> eklentileri gereklidir.</p>
+<pre><code class="language-yaml">type: custom:weather-forecast-card
+entity: weather.karabuk_safranbolu_hava_durumu
+name: Detaylı Hava Durumu
+show_current: true
+show_forecast: true
+show_condition_effects: true
+default_forecast: daily
+current:
+  temperature_entity: sensor.dis_termometre_sicaklik
+  humidity_entity: sensor.dis_termometre_nem
+  temperature_precision: 1
+  show_attributes:
+    - pressure
+    - wind_speed
+    - uv_index
+    - apparent_temperature
+    - visibility
+    - cloud_coverage
+forecast:
+  mode: chart
+  show_attribute_selector: true
+  use_color_thresholds: true
+  show_sun_times: true
+  extra_attribute: precipitation_probability
+  temperature_precision: 0
+  default_chart_attribute: temperature_and_precipitation
+card_mod:
+  style: |
+    ha-card {
+      min-height: 480px;
+      --ha-font-size-3xl: 52px;
+      --ha-font-size-xl: 28px;
+      --ha-font-size-m: 16px;
+      border-radius: 28px;
+      background: rgba(0, 0, 0, 0.3) !important;
+      box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
+    }
+</code></pre>
+
+<h3>❤️ Emeği Geçenler & Yasal Uyarı</h3>
+<ul>
+<li><strong>Geliştirici:</strong> Mutlu Tekir</li>
+<li><strong>İlk Geliştirici / Özel Teşekkür:</strong> Fatih Taşkın</li>
+<li><strong>Veri Kaynağı:</strong> Türkiye Meteoroloji Genel Müdürlüğü (MGM).</li>
+<li><em>Bu özel bir entegrasyondur ve MGM ile resmi bir bağlantısı yoktur.</em></li>
+</ul>
