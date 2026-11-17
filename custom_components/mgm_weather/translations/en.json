@@ -1,1 +1,24 @@
-
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "MGM Weather",
+        "description": "Enter the province and, optionally, the district to get weather data from the Turkish State Meteorological Service (MGM).",
+        "data": {
+          "city": "Province",
+          "district": "District"
+        },
+        "data_description": {
+          "city": "Province name, for example Istanbul, Ankara or Afyonkarahisar.",
+          "district": "Optional. District name, for example Kadıköy or Çankaya. Leave empty to use the province centre."
+        }
+      }
+    },
+    "error": {
+      "city_required": "Enter a province name."
+    },
+    "abort": {
+      "already_configured": "This location is already configured."
+    }
+  }
+}

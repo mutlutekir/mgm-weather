@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "MGM Hava Durumu",
+        "description": "Meteoroloji Genel Müdürlüğü (MGM) hava durumu verileri için il adını ve isterseniz ilçe adını girin.",
+        "data": {
+          "city": "İl",
+          "district": "İlçe"
+        },
+        "data_description": {
+          "city": "İl adı, örneğin İstanbul, Ankara veya Afyonkarahisar.",
+          "district": "İsteğe bağlı. İlçe adı, örneğin Kadıköy veya Çankaya. Boş bırakılırsa il merkezi kullanılır."
+        }
+      }
+    },
+    "error": {
+      "city_required": "Bir il adı girin."
+    },
+    "abort": {
+      "already_configured": "Bu konum zaten yapılandırılmış."
+    }
+  }
+}
