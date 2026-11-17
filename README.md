@@ -1,98 +1,93 @@
-<h1 align="center">MGM Weather - Home Assistant Integration</h1>
+<h1 align="center">MGM Hava Durumu for Home Assistant</h1>
 
-<div align="center">
-
-<a href="https://github.com/hacs/integration">
-<img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge" alt="HACS">
-</a>
-<a href="https://github.com/mutlutekir/mgm-weather/releases">
-<img src="https://img.shields.io/github/v/release/mutlutekir/mgm-weather?style=for-the-badge&color=blue" alt="Release">
-</a>
-<a href="https://github.com/mutlutekir">
-<img src="https://img.shields.io/badge/maintainer-Mutlu%20Tekir-green?style=for-the-badge" alt="Maintainer">
-</a>
-
-<h3>
-<a href="#english">🇬🇧 English</a> | <a href="#türkçe-kılavuz">🇹🇷 Türkçe</a>
-</h3>
-</div>
-
-<hr>
-
-<div id="english"></div>
-
-<h2>🇬🇧 English</h2>
-
-<p>
-<strong>MGM Weather</strong> is a custom integration for Home Assistant that retrieves weather data from the Turkish State Meteorological Service (MGM) via a custom proxy API. It provides accurate, localized weather conditions and forecasts for cities and districts in Turkey.
+<p align="center">
+Current conditions and forecasts from the Turkish State Meteorological Service (MGM), for any province or district in Türkiye.
 </p>
 
-<h3>🌟 Features & New Updates</h3>
-<ul>
-<li><strong>Real-time Data:</strong> Fetches current temperature, humidity, wind speed, pressure, and weather conditions.</li>
-<li><strong>District Support:</strong> Full support for getting localized weather data for districts, not just provinces.</li>
-<li><strong>Detailed Forecasts:</strong> Provides both a 5-day daily forecast and a <strong>3-hourly interval forecast</strong>.</li>
-<li><strong>MDI Icon Mapping:</strong> Missing MGM weather symbols are seamlessly mapped to the most appropriate Material Design Icons (MDI) for a native Home Assistant look.</li>
-<li><strong>Easy Configuration:</strong> Setup directly via the Home Assistant UI (Config Flow).</li>
-<li><strong>Multi-Location Support:</strong> Add as many provinces and districts as you like.</li>
-<li><strong>Localized:</strong> Fully compatible with Turkish locations and weather codes.</li>
-</ul>
+<p align="center">
+<a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Integration-41BDF5.svg?style=for-the-badge" alt="HACS"></a>
+<a href="https://github.com/mutlutekir/mgm-weather/releases"><img src="https://img.shields.io/github/v/release/mutlutekir/mgm-weather?style=for-the-badge&color=blue" alt="Latest release"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/mutlutekir/mgm-weather?style=for-the-badge" alt="License"></a>
+</p>
 
-<h3>🚀 Installation</h3>
+<p align="center"><a href="#english">English</a> · <a href="#turkce">Türkçe</a></p>
 
-<h4>Method 1: HACS (Recommended)</h4>
+---
 
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank">
-<img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.">
-</a>
+<a id="english"></a>
 
-<ol>
-<li>Open <strong>HACS</strong> in Home Assistant.</li>
-<li>Go to <strong>Integrations</strong> > click the 3 dots in the top right corner > <strong>Custom repositories</strong>.</li>
-<li>Paste the URL of this repository: <code>https://github.com/mutlutekir/mgm-weather</code></li>
-<li>Select <strong>Integration</strong> as the category and click <strong>Add</strong>.</li>
-<li>Search for <strong>"MGM Hava Durumu"</strong> and install it.</li>
-<li><strong>Restart</strong> Home Assistant.</li>
-</ol>
+## English
 
-<h4>Method 2: Manual</h4>
-<ol>
-<li>Download the <a href="https://github.com/mutlutekir/mgm-weather/releases">latest release</a>.</li>
-<li>Copy the <code>custom_components/mgm_weather</code> folder to your Home Assistant's <code>custom_components</code> directory.</li>
-<li><strong>Restart</strong> Home Assistant.</li>
-</ol>
+This integration reads the same data that powers [mgm.gov.tr](https://www.mgm.gov.tr) and turns it into Home Assistant weather entities. No account or API key is needed.
 
-<h3>⚙️ Configuration</h3>
+### What you get
 
-<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=mgm_weather" target="_blank">
-<img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Open your Home Assistant instance and start setting up a new integration.">
-</a>
+- **Any province or district.** Pick a province, and optionally a district. If MGM has no station for that district, the province centre is used instead.
+- **Two weather entities per location:** one with a 5-day forecast and one with MGM's 3-hourly forecast.
+- **Forecasts that line up with mgm.gov.tr.** Days and hours are taken from MGM's own timestamps, in Turkish time.
+- **MGM's own descriptions.** MGM's weather codes are translated into Home Assistant conditions and matching icons, and the original Turkish description is available as an attribute.
+- **Resilient to outages.** If MGM can't be reached, the last values stay on screen for up to 6 hours before the entities become unavailable.
+- **English and Turkish setup screens.**
 
-<ol>
-<li>Go to <strong>Settings</strong> > <strong>Devices & Services</strong>.</li>
-<li>Click <strong>+ ADD INTEGRATION</strong> in the bottom right corner.</li>
-<li>Search for <strong>"MGM Hava Durumu"</strong>.</li>
-<li>Enter your city name (e.g., <code>Istanbul</code>, <code>Afyonkarahisar</code>, <code>Ankara</code>) in the popup box.</li>
-<li>Enter your district name if you want (e.g., <code>Kadıköy</code>, <code>Şebinkarahisar</code>, <code>Çankaya</code>) in the popup box.</li>
-<li>Click <strong>Submit</strong>.</li>
-</ol>
+### Installation
 
-<h3>📊 Dashboard Card Examples</h3>
+**HACS**
 
-<h4>3-Hourly Forecast Card</h4>
-<pre><code class="language-yaml">show_current: false
-show_forecast: true
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open this repository in HACS"></a>
+
+1. Click the button above, or search for **MGM Hava Durumu** in HACS. If it doesn't show up, add `https://github.com/mutlutekir/mgm-weather` under HACS → ⋮ → *Custom repositories*, type *Integration*.
+2. Download it, then restart Home Assistant.
+
+**Manual**
+
+Copy `custom_components/mgm_weather` from the [latest release](https://github.com/mutlutekir/mgm-weather/releases) into the `custom_components` folder of your Home Assistant configuration, then restart.
+
+### Setup
+
+<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=mgm_weather" target="_blank"><img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Add MGM Hava Durumu to Home Assistant"></a>
+
+Or go to **Settings → Devices & services → Add integration** and choose **MGM Hava Durumu**.
+
+| Field | |
+|---|---|
+| **Province** | Required, e.g. `Ankara`, `İstanbul`, `Afyonkarahisar`. |
+| **District** | Optional, e.g. `Çankaya`, `Kadıköy`. Turkish letters are optional: `kadikoy` works too. Leave it empty for the province centre. |
+
+Add the integration again for each extra location.
+
+### Entities
+
+For *İstanbul / Kadıköy*, for example:
+
+| Entity | Forecast |
+|---|---|
+| `weather.istanbul_kadikoy_hava_durumu` | 5 days |
+| `weather.istanbul_kadikoy_saatlik` | every 3 hours |
+
+Both show the current temperature, humidity, pressure and wind speed, and refresh every 20 minutes. Extra attributes:
+
+- `detayli_hadise`: MGM's description of the current weather, e.g. *Parçalı Bulutlu*
+- `mgm_hadise_kodu`: MGM's code for it, e.g. `PB`
+
+### Dashboard examples
+
+3-hourly forecast with the built-in weather card:
+
+```yaml
 type: weather-forecast
 entity: weather.karabuk_merkez_saatlik
+show_current: false
+show_forecast: true
 forecast_type: hourly
+forecast_slots: 24
 grid_options:
   rows: auto
-forecast_slots: 24
-</code></pre>
+```
 
-<h4>Current & 5-Day Forecast Card (Detailed)</h4>
-<p>Note: This example uses <code>custom:weather-forecast-card</code> and <code>card_mod</code>.</p>
-<pre><code class="language-yaml">type: custom:weather-forecast-card
+Current conditions and a 5-day chart with [weather-forecast-card](https://community.home-assistant.io/t/slightly-improved-weather-forecast-card-for-home-assistant/966687) and [card-mod](https://github.com/thomasloven/lovelace-card-mod). The `temperature_entity` and `humidity_entity` lines are optional and use your own outdoor sensors:
+
+```yaml
+type: custom:weather-forecast-card
 entity: weather.karabuk_safranbolu_hava_durumu
 name: Detaylı Hava Durumu
 show_current: true
@@ -106,18 +101,12 @@ current:
   show_attributes:
     - pressure
     - wind_speed
-    - uv_index
-    - apparent_temperature
-    - visibility
-    - cloud_coverage
 forecast:
   mode: chart
   show_attribute_selector: true
   use_color_thresholds: true
   show_sun_times: true
-  extra_attribute: precipitation_probability
   temperature_precision: 0
-  default_chart_attribute: temperature_and_precipitation
 card_mod:
   style: |
     ha-card {
@@ -129,134 +118,79 @@ card_mod:
       background: rgba(0, 0, 0, 0.3) !important;
       box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
     }
-</code></pre>
+```
 
-<h3>❤️ Credits & Disclaimer</h3>
-<ul>
-<li><strong>Developer:</strong> Mutlu Tekir</li>
-<li><strong>Original Developer / Special Thanks:</strong> Fatih Taşkın</li>
-<li><strong>Data Source:</strong> Turkish State Meteorological Service (MGM) via proxy API.</li>
-<li><em>This is a custom integration and is not officially affiliated with MGM.</em></li>
-</ul>
+### Credits
 
-<hr>
+- Developed and maintained by **Mutlu Tekir**.
+- Inspired by **Fatih Taşkın**'s mgm-weather integration.
+- Weather data: Turkish State Meteorological Service (MGM). This project is independent and not affiliated with or endorsed by MGM.
+- Licensed under GPL-3.0, see [LICENSE](LICENSE).
 
-<div id="türkçe-kılavuz"></div>
+---
 
-<h2>🇹🇷 Türkçe Kılavuz</h2>
+<a id="turkce"></a>
 
-<p>
-<strong>MGM Weather</strong>, Türkiye Meteoroloji Genel Müdürlüğü (MGM) verilerini özel bir proxy API üzerinden Home Assistant'a aktaran özel bir entegrasyondur. Türkiye'deki il ve ilçeler için en doğru anlık hava durumu ve tahmin verilerini sağlar.
-</p>
+## Türkçe
 
-<h3>🌟 Özellikler ve Yeni Güncellemeler</h3>
-<ul>
-<li><strong>Anlık Veri:</strong> Sıcaklık, nem, rüzgar hızı, basınç ve hava durumu ikonunu anlık çeker.</li>
-<li><strong>İlçe Desteği:</strong> Sadece iller için değil, artık ilçeler bazında da tam uyumlu hava durumu desteği sunar.</li>
-<li><strong>Detaylı Tahmin:</strong> 5 günlük hava tahminine ek olarak <strong>3 saatlik aralıklarla saatlik hava tahmini</strong> eklendi.</li>
-<li><strong>MDI İkon Eşleştirme:</strong> MGM verilerinde karşılığı olmayan eksik hava durumu simgeleri, arayüzde sorun yaratmaması için uygun Material Design (MDI) ikonlarıyla eşleştirildi.</li>
-<li><strong>Kolay Kurulum:</strong> Home Assistant arayüzü üzerinden (Config Flow) saniyeler içinde kurulur.</li>
-<li><strong>Çoklu Lokasyon:</strong> İstediğiniz kadar farklı il ve ilçe ekleyebilirsiniz.</li>
-<li><strong>Yerelleştirilmiş:</strong> Türkiye lokasyonları ve MGM hava durumu kodlarıyla tam uyumludur.</li>
-</ul>
+Bu entegrasyon, [mgm.gov.tr](https://www.mgm.gov.tr) sitesinin kullandığı verileri alıp Home Assistant'ta hava durumu varlıklarına dönüştürür. Hesap ya da API anahtarı gerekmez.
 
-<h3>🚀 Kurulum</h3>
+### Neler sunar
 
-<h4>Yöntem 1: HACS (Önerilen)</h4>
+- **Her il ve ilçe.** Bir il, isterseniz bir de ilçe seçersiniz. MGM'nin o ilçede istasyonu yoksa il merkezinin verileri kullanılır.
+- **Her konum için iki hava durumu varlığı:** biri 5 günlük, diğeri MGM'nin 3 saatlik tahminiyle.
+- **mgm.gov.tr ile birebir aynı günler ve saatler.** Tarihler ve saatler MGM'nin kendi verisinden, Türkiye saatiyle alınır.
+- **MGM'nin kendi ifadeleri.** MGM hadise kodları Home Assistant durumlarına ve uygun simgelere çevrilir; MGM'nin Türkçe açıklaması da bir öznitelik olarak gelir.
+- **Kesintilere dayanıklı.** MGM'ye ulaşılamazsa son değerler 6 saate kadar ekranda kalır, ancak sonra varlıklar kullanılamaz duruma geçer.
+- **Türkçe ve İngilizce kurulum ekranı.**
 
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank">
-<img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Home Assistant örneğinizi açın ve Home Assistant Topluluk Mağazası içinde bir depo açın.">
-</a>
+### Kurulum
 
-<ol>
-<li>Home Assistant'ta <strong>HACS</strong> menüsünü açın.</li>
-<li><strong>Integrations</strong> (Entegrasyonlar) kısmına gidin > sağ üstteki üç noktaya tıklayın > <strong>Custom repositories</strong> (Özel depolar).</li>
-<li>Bu reponun adresini yapıştırın: <code>https://github.com/mutlutekir/mgm-weather</code></li>
-<li>Kategori olarak <strong>Integration</strong> seçin ve <strong>Ekle</strong> deyin.</li>
-<li>Listeden <strong>"MGM Hava Durumu"</strong> entegrasyonunu bulup indirin.</li>
-<li>Home Assistant'ı <strong>Yeniden Başlatın</strong>.</li>
-</ol>
+**HACS**
 
-<h4>Yöntem 2: Manuel</h4>
-<ol>
-<li><a href="https://github.com/mutlutekir/mgm-weather/releases">En son sürümü</a> indirin.</li>
-<li><code>custom_components/mgm_weather</code> klasörünü Home Assistant dizininizdeki <code>custom_components</code> klasörünün içine kopyalayın.</li>
-<li>Home Assistant'ı <strong>Yeniden Başlatın</strong>.</li>
-</ol>
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=mutlutekir&repository=mgm-weather&category=integration" target="_blank"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Bu depoyu HACS'ta aç"></a>
 
-<h3>⚙️ Yapılandırma</h3>
+1. Yukarıdaki düğmeye tıklayın ya da HACS'ta **MGM Hava Durumu** diye aratın. Listede çıkmazsa HACS → ⋮ → *Custom repositories* bölümüne `https://github.com/mutlutekir/mgm-weather` adresini *Integration* türüyle ekleyin.
+2. İndirin ve Home Assistant'ı yeniden başlatın.
 
-<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=mgm_weather" target="_blank">
-<img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Home Assistant örneğinizi açın ve yeni bir entegrasyon ayarlamaya başlayın.">
-</a>
+**Elle kurulum**
 
-<ol>
-<li><strong>Ayarlar</strong> > <strong>Cihazlar ve Hizmetler</strong> menüsüne gidin.</li>
-<li>Sağ alttaki <strong>+ ENTEGRASYON EKLE</strong> butonuna tıklayın.</li>
-<li>Arama kutusuna <strong>"MGM Hava Durumu"</strong> yazın.</li>
-<li>Açılan pencereye şehir adını yazın (Örn: <code>Istanbul</code>, <code>Afyonkarahisar</code>, <code>Ankara</code>).</li>
-<li>Açılan pencereye ilçe adını yazın (Örn: <code>Kadıköy</code>, <code>Şebinkarahisar</code>, <code>Çankaya</code>).</li>
-<li><strong>Gönder</strong> butonuna tıklayın.</li>
-</ol>
+[Son sürümdeki](https://github.com/mutlutekir/mgm-weather/releases) `custom_components/mgm_weather` klasörünü Home Assistant yapılandırmanızdaki `custom_components` klasörüne kopyalayın ve yeniden başlatın.
 
-<h3>📊 Dashboard Kart Örnekleri</h3>
+### Ayarlama
 
-<h4>3 Saatlik Hava Durumu Kartı</h4>
-<pre><code class="language-yaml">show_current: false
-show_forecast: true
-type: weather-forecast
-entity: weather.karabuk_merkez_saatlik
-forecast_type: hourly
-grid_options:
-  rows: auto
-forecast_slots: 24
-</code></pre>
+<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=mgm_weather" target="_blank"><img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="MGM Hava Durumu'nu Home Assistant'a ekle"></a>
 
-<h4>Anlık ve 5 Günlük Detaylı Hava Durumu Kartı</h4>
-<p>Not: Bu kart için <code>custom:weather-forecast-card</code> ve <code>card_mod</code> eklentileri gereklidir.</p>
-<pre><code class="language-yaml">type: custom:weather-forecast-card
-entity: weather.karabuk_safranbolu_hava_durumu
-name: Detaylı Hava Durumu
-show_current: true
-show_forecast: true
-show_condition_effects: true
-default_forecast: daily
-current:
-  temperature_entity: sensor.dis_termometre_sicaklik
-  humidity_entity: sensor.dis_termometre_nem
-  temperature_precision: 1
-  show_attributes:
-    - pressure
-    - wind_speed
-    - uv_index
-    - apparent_temperature
-    - visibility
-    - cloud_coverage
-forecast:
-  mode: chart
-  show_attribute_selector: true
-  use_color_thresholds: true
-  show_sun_times: true
-  extra_attribute: precipitation_probability
-  temperature_precision: 0
-  default_chart_attribute: temperature_and_precipitation
-card_mod:
-  style: |
-    ha-card {
-      min-height: 480px;
-      --ha-font-size-3xl: 52px;
-      --ha-font-size-xl: 28px;
-      --ha-font-size-m: 16px;
-      border-radius: 28px;
-      background: rgba(0, 0, 0, 0.3) !important;
-      box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
-    }
-</code></pre>
+Ya da **Ayarlar → Cihazlar ve hizmetler → Entegrasyon ekle** yolunu izleyip **MGM Hava Durumu**'nu seçin.
 
-<h3>❤️ Emeği Geçenler & Yasal Uyarı</h3>
-<ul>
-<li><strong>Geliştirici:</strong> Mutlu Tekir</li>
-<li><strong>İlk Geliştirici / Özel Teşekkür:</strong> Fatih Taşkın</li>
-<li><strong>Veri Kaynağı:</strong> Türkiye Meteoroloji Genel Müdürlüğü (MGM).</li>
-<li><em>Bu özel bir entegrasyondur ve MGM ile resmi bir bağlantısı yoktur.</em></li>
-</ul>
+| Alan | |
+|---|---|
+| **İl** | Zorunlu. Örnek: `Ankara`, `İstanbul`, `Afyonkarahisar`. |
+| **İlçe** | İsteğe bağlı. Örnek: `Çankaya`, `Kadıköy`. Türkçe harf şart değil, `kadikoy` da olur. Boş bırakırsanız il merkezi kullanılır. |
+
+Başka bir konum için entegrasyonu tekrar ekleyin.
+
+### Varlıklar
+
+Örneğin *İstanbul / Kadıköy* için:
+
+| Varlık | Tahmin |
+|---|---|
+| `weather.istanbul_kadikoy_hava_durumu` | 5 günlük |
+| `weather.istanbul_kadikoy_saatlik` | 3 saatte bir |
+
+İkisi de anlık sıcaklık, nem, basınç ve rüzgar hızını gösterir, 20 dakikada bir güncellenir. Ek öznitelikler:
+
+- `detayli_hadise`: MGM'nin o anki hava için açıklaması, örneğin *Parçalı Bulutlu*
+- `mgm_hadise_kodu`: MGM'nin bu durum için kodu, örneğin `PB`
+
+### Kart örnekleri
+
+Örnek YAML'lar İngilizce bölümdeki [Dashboard examples](#dashboard-examples) başlığında. İlki Home Assistant'ın kendi hava durumu kartıyla 3 saatlik tahmini gösterir. İkincisi [weather-forecast-card](https://community.home-assistant.io/t/slightly-improved-weather-forecast-card-for-home-assistant/966687) ve [card-mod](https://github.com/thomasloven/lovelace-card-mod) ile anlık durumu ve 5 günlük grafiği gösterir; `temperature_entity` ve `humidity_entity` satırları isteğe bağlıdır, kendi dış ortam sensörlerinizi kullanır.
+
+### Teşekkür ve yasal not
+
+- Geliştiren ve sürdüren: **Mutlu Tekir**.
+- **Fatih Taşkın**'ın mgm-weather entegrasyonundan esinlenilmiştir.
+- Hava durumu verisi: Meteoroloji Genel Müdürlüğü (MGM). Bu proje bağımsızdır; MGM ile bir bağlantısı yoktur ve MGM tarafından onaylanmamıştır.
+- GPL-3.0 lisansıyla dağıtılır, bkz. [LICENSE](LICENSE).
